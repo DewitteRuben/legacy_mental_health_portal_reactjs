@@ -56,15 +56,6 @@ class Clients extends React.Component<ClientsProps, ClientsState> {
         <td>{new Date(client.dateOfBirth).toLocaleDateString()}</td>
         <td>
           <Button
-            onClick={(ev: any) => {
-              ev.preventDefault();
-              ev.stopPropagation();
-            }}
-            style={{ marginRight: "10px" }}
-          >
-            Edit
-          </Button>
-          <Button
             onClick={async (ev: any) => {
               ev.preventDefault();
               ev.stopPropagation();
