@@ -116,6 +116,10 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
     this.setState({ loading: true });
     try {
       const weightData = await getClientWeightDataByUserId(userId);
+      weightData.sort(
+        (a: any, b: any) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
       this.setState({ weightData });
     } catch (error) {
     } finally {
@@ -142,6 +146,10 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
     this.setState({ loading: true });
     try {
       const moodData = await getClientMoodDataByUserId(userId);
+      moodData.sort(
+        (a: any, b: any) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
       this.setState({ moodData });
     } catch (error) {
     } finally {
@@ -170,6 +178,14 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
           const moodData = await getClientMoodDataByUserId(userId);
           const taskData = await getTasksByUserId(userId);
           const weightData = await getClientWeightDataByUserId(userId);
+          weightData.sort(
+            (a: any, b: any) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
+          moodData.sort(
+            (a: any, b: any) =>
+              new Date(b.date).getTime() - new Date(a.date).getTime()
+          );
           if (res.client.length) {
             this.setState({
               weightData,
@@ -190,10 +206,12 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
     const { moodData } = this.state;
     let graphData = null;
     if (moodData) {
-      graphData = moodData.map((entry: any) => ({
-        x: new Date(entry.date),
-        y: moodChartMapping[entry.mood]
-      }));
+      graphData = moodData.map((entry: any) => {
+        return { x: new Date(entry.date), y: moodChartMapping[entry.mood] };
+      });
+      graphData.sort((a: any, b: any) => {
+        return b.x.getTime() - a.x.getTime();
+      });
     }
     return graphData;
   };
@@ -206,6 +224,9 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
         x: new Date(entry.date),
         y: entry.amount
       }));
+      graphData.sort((a: any, b: any) => {
+        return b.x.getTime() - a.x.getTime();
+      });
     }
     return graphData;
   };
@@ -218,6 +239,9 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
         x: new Date(entry.date),
         y: entry.sleep
       }));
+      graphData.sort((a: any, b: any) => {
+        return b.x.getTime() - a.x.getTime();
+      });
     }
     return graphData;
   };
@@ -538,7 +562,7 @@ class DetailClient extends React.Component<DetailsProps, DetailsState> {
       weightData
     } = this.state;
 
-    console.log(weightData);
+    console.log(this.getMoodChartData());
     if (loading) {
       return (
         <div
